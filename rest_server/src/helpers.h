@@ -16,6 +16,14 @@ public:
 		status_code_m(status_code), std::runtime_error(message) {}
 };
 
+/**
+ * @example
+ * Json::Value json = jO({
+ *     {"name", "John Doe"},
+ *     {"age", 30}
+ * });
+ * // Results in: {"name": "John Doe", "age": 30}
+ */
 Json::Value jO(std::initializer_list<std::pair<std::string, Json::Value>> list) {
 	Json::Value json;
 	for (const auto& [key, value] : list) {
@@ -24,6 +32,18 @@ Json::Value jO(std::initializer_list<std::pair<std::string, Json::Value>> list) 
 	return json;
 }
 
+/**
+ * @example
+ * orm::PostgresConfig config;
+ * parseConnectionString("postgres://user:pass@localhost:5432/mydb?sslmode=disable", config);
+ * // Results in:
+ * // config.username = "user"
+ * // config.password = "pass"
+ * // config.host = "localhost"
+ * // config.port = 5432
+ * // config.databaseName = "mydb"
+ * // (sslmode parameter is not handled in this implementation)
+ */
 void parseConnectionString(const std::string& connectionString, orm::PostgresConfig& config) {
 	// 'postgres://node:node@swarm.next:15001/aip_data?sslmode=disable'
 	std::regex pattern("(?:postgresql|postgres)://(?:([^:@]+)(?::([^@]+))?@)?([^:/]+)(?::([^/]+))?/([^?]+)(?:\\?(.*))?");

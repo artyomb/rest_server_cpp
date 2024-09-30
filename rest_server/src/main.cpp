@@ -85,6 +85,7 @@ int main(int argc, char* argv[]) {
 		.run();
 }
 
+// DB can be configured in config.json:
 //   "db_clients": [
 //  {
 //    "name": "default",          // Name for this DB client (used in app().getDbClient("postgres_client"))

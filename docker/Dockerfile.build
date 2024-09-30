@@ -1,0 +1,16 @@
+FROM ruby:3.3.0-alpine3.19  AS base
+RUN apk add bash docker-cli-buildx git
+RUN gem install build-labels:0.0.22 dry-stack:0.0.84
+
+FROM base AS runner
+WORKDIR /build
+COPY . .
+
+CMD ["bash", "-c", "-x", "\
+    cd /build/docker && \
+    git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA | tee ../changes.txt && \
+    build-labels -n -c docker-compose.yml gitlab set_version to_dockerfiles to_compose | tee bake.yml && \
+    export OTEL_RESOURCE_ATTRIBUTES=service.name=docker-builder,pipeline.id=${CI_PIPELINE_ID},project.name=${CI_PROJECT_NAME} && \
+    export CI_COMMIT_BRANCH_LC=${CI_COMMIT_BRANCH,,} && \
+    grep \"services: {}\" bake.yml || REGISTRY_HOST=$CI_REGISTRY_HOST docker buildx bake -f bake.yml --push \
+    "]

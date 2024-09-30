@@ -1,0 +1,21 @@
+services:
+  rest-cxx:
+    image: ${REGISTRY_HOST}/next/rest-cxx/${CI_COMMIT_BRANCH_LC}
+    build:
+      context: ../rest_server
+      dockerfile: ../docker/cxx/Dockerfile
+      args:
+        - A=A
+    environment:
+      DB_URL: postgres://node:node@swarm.next:15001/aip_data?sslmode=disable
+      PORT: 8000
+    ports:
+      - 8000:8000
+
+
+  rest-cxx-dev:
+    image: ${REGISTRY_HOST}/devcontainer/rest-cxx-dev
+    build:
+      target: build-dev
+      context: ../rest_server
+      dockerfile: ../docker/cxx/Dockerfile

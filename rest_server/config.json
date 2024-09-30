@@ -1,0 +1,10 @@
+// https://drogonframework.github.io/drogon-docs/#/ENG/ENG-11-Configuration-File?id=configuration-file
+{
+"app": {
+    "threads_num": 0                  // If the value is set to 0, the number of IO threads will be the number of all hardware cores.
+  },
+  "log": {
+    "log_size_limit": 100000000,
+    "log_level": "INFO" // A string, the default value is "DEBUG", which indicates the lowest level of log output. The optional values ​​are from low to high: "TRACE", "DEBUG", "INFO", "WARN", where the TRACE level is only valid when compiling in DEBUG mode.
+  }
+}

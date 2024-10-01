@@ -1,6 +1,5 @@
 # CPP REST server with Drogon library
 
-
 This project demonstrates the implementation of a RESTful API server using C++ and the Drogon web application framework. 
 Drogon is a high-performance HTTP application framework written in modern C++.
 

@@ -12,5 +12,5 @@ jobs:
           docker run --rm --env-file <(env | grep ^CI_)
           -v /var/run/docker.sock:/var/run/docker.sock
           -v /root/.docker:/root/.docker
-          $(docker build -q -f docker/Dockerfile.build rest_server) 2>&1
+          $(docker build -q -f docker/Dockerfile.build .) 2>&1
 

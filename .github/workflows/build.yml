@@ -10,9 +10,10 @@ jobs:
       - uses: docker/setup-buildx-action@v1
       - env:
           CI_REGISTRY_HOST: 127.0.0.1
-        run:
+#          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        run: |
+          export CI_COMMIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           docker run --rm --env-file <(env | grep ^CI_)
           -v /var/run/docker.sock:/var/run/docker.sock
           -v /root/.docker:/root/.docker
           $(docker build -q -f docker/Dockerfile.build .) 2>&1
-

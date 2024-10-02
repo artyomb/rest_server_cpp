@@ -11,10 +11,3 @@ services:
       PORT: 8000
     ports:
       - 8000:8000
-
-  rest-cxx-dev:
-    image: ${REGISTRY_HOST}/devcontainer/rest-cxx-dev
-    build:
-      target: build-dev
-      context: ../rest_server
-      dockerfile: ../docker/cxx/Dockerfile

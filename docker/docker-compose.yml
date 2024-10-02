@@ -1,6 +1,6 @@
 services:
   rest-cxx:
-    image: ${REGISTRY_HOST}/next/rest-cxx/${CI_COMMIT_BRANCH}
+    image: ${REGISTRY_HOST}/rest-cxx/${CI_COMMIT_BRANCH}
     build:
       context: ../rest_server
       dockerfile: ../docker/cxx/Dockerfile
@@ -11,7 +11,6 @@ services:
       PORT: 8000
     ports:
       - 8000:8000
-
 
   rest-cxx-dev:
     image: ${REGISTRY_HOST}/devcontainer/rest-cxx-dev

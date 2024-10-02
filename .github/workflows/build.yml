@@ -7,20 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: docker/setup-buildx-action@v1
+      - uses: docker/login-action@v2
         with:
-          buildkitd-flags: --debug
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v1
+        with: { buildkitd-flags: --debug }
       - uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-      - uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - env:
           CI_REGISTRY_HOST: 127.0.0.1
 #          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -28,9 +27,10 @@ jobs:
           export CI_COMMIT_BRANCH=${{ github.ref_name }}
           export REPOSITORY_OWNER=${{ github.repository_owner}}
           export CI_REGISTRY_HOST=ghcr.io/${REPOSITORY_OWNER,,}/${{ github.event.repository.name }}
+          whoami; echo $USER; echo $HOME
           docker run --rm --env-file <(env | grep ^CI_) \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            -v /root/.docker:/root/.docker \
+            -v $HOME/.docker:/root/.docker \
             $(docker build -q -f docker/Dockerfile.build .) 2>&1         
 
 #  build-to-ghcr_io:

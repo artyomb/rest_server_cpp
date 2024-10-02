@@ -12,6 +12,6 @@ CMD ["bash", "-c", "-x", "\
     build-labels -n -c docker-compose.yml gitlab set_version to_dockerfiles to_compose | tee bake.yml && \
     export OTEL_RESOURCE_ATTRIBUTES=service.name=docker-builder,pipeline.id=${CI_PIPELINE_ID},project.name=${CI_PROJECT_NAME} && \
     export CI_COMMIT_BRANCH_LC=${CI_COMMIT_BRANCH,,} && \
-    grep \"services: {}\" bake.yml || REGISTRY_HOST=$CI_REGISTRY_HOST docker buildx bake -f bake.yml  \
+    grep \"services: {}\" bake.yml || REGISTRY_HOST=$CI_REGISTRY_HOST docker buildx bake -f bake.yml --push \
     "]
 #    --push

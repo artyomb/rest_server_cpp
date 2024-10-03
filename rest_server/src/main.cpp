@@ -1,7 +1,7 @@
 #include "drogon_ex.h"
 #include <string>
 #include <cxxopts.hpp>
-
+#include "../view_src/index.h"
 using namespace drogon;
 
 drogon::Task<Json::Value> health_check(const drogon::HttpRequestPtr &req) {
@@ -47,7 +47,6 @@ Task<Json::Value> getUserProfile(const HttpRequestPtr &req)
 }
 
 
-
 int main(int argc, char* argv[]) {
 	cxxopts::Options o_parser("MyApp", "Description of MyApp");
 	o_parser.add_options()
@@ -56,6 +55,18 @@ int main(int argc, char* argv[]) {
 
 	registerRoute("/healthcheck", Get, health_check);
 	registerRoute("/user/{username}/profile", Get, getUserProfile);
+
+	drogon::app().registerHandler("/", [](const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
+	    IndexCSP index;
+	    HttpViewData data;
+	    data["name"] = req->getParameter("name");
+
+	    auto resp = HttpResponse::newHttpResponse();
+	    resp->setBody(index.genText(data));
+//	    auto resp = HttpResponse::newHttpViewResponse("HelloView", data);
+	    callback(resp);
+	}, {Get});
+
 
 	drogon::app().loadConfigFile("./config.json");
 
@@ -80,9 +91,9 @@ int main(int argc, char* argv[]) {
 	app().addDbClient(db_config);
 
 	app().setLogLevel(trantor::Logger::kTrace)
-		.addListener("0.0.0.0", options["port"].as<int>())
-		.setThreadNum(0) // If 0, the number of IO threads will be the number of all hardware cores.
-		.run();
+	    .addListener("0.0.0.0", options["port"].as<int>())
+	    .setThreadNum(0) // If 0, the number of IO threads will be the number of all hardware cores.
+	    .run();
 }
 
 // DB can be configured in config.json:

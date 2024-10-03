@@ -15,7 +15,7 @@ FetchContent_Declare(
 )
 
 set(BUILD_POSTGRESQL ON)
-set(BUILD_CTL OFF)
+set(BUILD_CTL ON)
 set(BUILD_EXAMPLES OFF)
 set(BUILD_YAML_CONFIG OFF)
 #set(USE_STATIC_LIBS_ONLY OFF)
@@ -23,7 +23,9 @@ set(BUILD_YAML_CONFIG OFF)
 FetchContent_MakeAvailable(drogon)
 find_package(cxxopts REQUIRED)
 
-add_executable(rest_server src/main.cpp)
+file(GLOB_RECURSE SRC_FILES "src/*.c*")
+file(GLOB_RECURSE VIEW_SRC_FILES "view_src/*.c*")
+add_executable(rest_server ${SRC_FILES} ${VIEW_SRC_FILES})
 
 target_link_libraries(rest_server PRIVATE cxxopts::cxxopts drogon )
 
